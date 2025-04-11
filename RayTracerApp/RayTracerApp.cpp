@@ -2,19 +2,28 @@
 //
 
 #include <iostream>
+using namespace std;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	//Image
+	int image_width = 256;
+	int image_height = 256;
+
+	// Render
+	cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+
+	for (int j = 0; j < image_height; j++) {
+		clog << "\rScanlines remaining: " << image_height - j << ' ' << flush;
+		for (int i = 0; i < image_width; i++) {
+			auto r = double(i) / (image_width - 1);
+			auto g = double(j) / (image_height - 1);
+			auto b = 0.0;
+
+			int ir = static_cast<int>(255.999 * r);
+			int ig = static_cast<int>(255.999 * g);
+			int ib = static_cast<int>(255.999 * b);
+			cout << ir << " " << ig << " " << ib << "\n";
+		}
+	}
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
