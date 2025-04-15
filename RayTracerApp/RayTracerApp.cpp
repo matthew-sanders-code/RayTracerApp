@@ -11,9 +11,7 @@ using namespace std;
 color ray_color(const ray& r) {
 	vec3 unit_direction = unit_vector(r.direction());
 	auto a = 0.5 * (unit_direction.y() + 1.0);
-	return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
-}
-
+	return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0)
 int main()
 {
     // Image
@@ -54,10 +52,9 @@ int main()
 			auto ray_direction = pixel_center - camera_center;
 			ray r(camera_center, ray_direction);
 
-            color pixel_color = ray_color(r);
+            		color pixel_color = ray_color(r);
+			auto pixel_color = color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0);
 			write_color(std::cout, pixel_color);
 		}
 	}
-
-	
 }
