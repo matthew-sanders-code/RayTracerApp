@@ -3,6 +3,9 @@
 
 #include "hittable.h"
 #include "material.h"
+#include "bitmap.h"
+#include <vector>
+#include <cstdint>
 
 class camera {
 public:
@@ -19,6 +22,8 @@ public:
     double defocus_angle = 0;
     double focus_dist = 10;
 
+	std::vector<uint8_t> pixelBuffer; // Buffer for pixel data
+
     void render(const hittable& world) {
         initialize();
 
@@ -32,11 +37,14 @@ public:
                     ray r = get_ray(i, j);
                     pixel_color += ray_color(r, max_depth, world);
                 }
-                write_color(std::cout, pixel_samples_scale * pixel_color);
+                write_color(std::cout, pixel_samples_scale * pixel_color, pixelBuffer);
             }
         }
 
         std::clog << "\rDone.                 \n";
+
+        Bitmap b;
+        b.saveBMP("image.bmp", pixelBuffer, image_width, image_height);
     }
 
 private:
@@ -47,8 +55,8 @@ private:
     vec3   pixel_delta_u;  // Offset to pixel to the right
     vec3   pixel_delta_v;  // Offset to pixel below
 	vec3   u, v, w;        // Camera frame basis vectors
-    vec3 defocus_disk_u;   // Defocus disk H radius
-	vec3 defocus_disk_v;   // Defocus disk V radius
+    vec3   defocus_disk_u;   // Defocus disk H radius
+	vec3   defocus_disk_v;   // Defocus disk V radius
 
     void initialize() {
         image_height = int(image_width / aspect_ratio);

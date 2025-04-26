@@ -51,6 +51,7 @@ private:
     color albedo;
     double fuzz;
 };
+
 class dielectric : public material {
 public:
     dielectric(double refraction_index) : refraction_index(refraction_index) {}

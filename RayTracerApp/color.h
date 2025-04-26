@@ -3,6 +3,8 @@
 
 #include "interval.h"
 #include "vec3.h"
+#include <vector>
+#include <cstdint>
 
 using color = vec3;
 
@@ -14,7 +16,7 @@ inline double linear_to_gamma(double linear_component)
     return 0;
 }
 
-void write_color(std::ostream& out, const color& pixel_color) {
+void write_color(std::ostream& out, const color& pixel_color, std::vector<uint8_t>& pixelBuffer) {
     auto r = pixel_color.x();
     auto g = pixel_color.y();
     auto b = pixel_color.z();
@@ -28,6 +30,10 @@ void write_color(std::ostream& out, const color& pixel_color) {
     int rbyte = int(256 * intensity.clamp(r));
 	int gbyte = int(256 * intensity.clamp(g));
 	int bbyte = int(256 * intensity.clamp(b));
+
+    pixelBuffer.push_back(bbyte);
+	pixelBuffer.push_back(gbyte);
+    pixelBuffer.push_back(rbyte);
 
     // Write out the pixel color components.
     out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
