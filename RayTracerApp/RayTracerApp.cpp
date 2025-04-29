@@ -1,5 +1,4 @@
 #include "rtweekend.h"
-
 #include "camera.h"
 #include "hittable.h"
 #include "hittable_list.h"
@@ -57,7 +56,7 @@ int main()
     camera cam;
 
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 300;
+    cam.image_width = 500;
     cam.samples_per_pixel = 10;
     cam.max_depth = 50;
 
@@ -70,4 +69,6 @@ int main()
     cam.focus_dist = 10.0;
 
     cam.render(world);
+    Bitmap::DisplayBitmap(cam.image_width, cam.aspect_ratio);
 }
+

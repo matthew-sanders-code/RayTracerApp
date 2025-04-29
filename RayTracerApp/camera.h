@@ -43,8 +43,7 @@ public:
 
         std::clog << "\rDone.                 \n";
 
-        Bitmap b;
-        b.saveBMP("image.bmp", pixelBuffer, image_width, image_height);
+        Bitmap::saveBMP("image.bmp", pixelBuffer, image_width, image_height);
     }
 
 private:

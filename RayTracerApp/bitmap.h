@@ -5,6 +5,9 @@
 #include <fstream>
 #include <vector>
 #include <stdexcept>
+#include "camera.h"
+
+#include <SFML/Graphics.hpp>
 
 #pragma pack(push, 1)
 struct BMPHeader {
@@ -65,6 +68,30 @@ public:
         }
 
         file.close();
+    }
+
+    static void DisplayBitmap(int image_width, double aspect_ratio) {
+        unsigned int width = static_cast<unsigned int>(image_width);
+        unsigned int height = static_cast<unsigned int>(image_width / aspect_ratio);
+        sf::RenderWindow window(sf::VideoMode({ width, height }), "RayTracing");
+        sf::Texture texture;
+        if (!texture.loadFromFile("image.bmp", false))
+        {
+            std::cout << "Failed to load image" << std::endl;
+        }
+        sf::Sprite sprite(texture);
+        while (window.isOpen())
+        {
+            while (const std::optional event = window.pollEvent())
+            {
+                if (event->is<sf::Event::Closed>())
+                    window.close();
+            }
+
+            window.clear();
+            window.draw(sprite);
+            window.display();
+        }
     }
 };
 
