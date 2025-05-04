@@ -6,6 +6,10 @@
 #include "bitmap.h"
 #include <vector>
 #include <cstdint>
+#include <chrono>
+#include <iomanip>
+#include <thread>
+#include <iostream>
 
 class camera {
 public:
@@ -24,24 +28,57 @@ public:
 
 	std::vector<uint8_t> pixelBuffer; // Buffer for pixel data
 
+	std::vector<uint8_t> renderSection(const hittable& world, const int start, const int end) {
+		// Render a section of the image from start to end
+        std::vector<uint8_t> sectionPixels;
+		for (int j = start; j < end; j++) {
+			for (int i = 0; i < image_width; i++) {
+				color pixel_color(0, 0, 0);
+				for (int sample = 0; sample < samples_per_pixel; sample++) {
+					ray r = get_ray(i, j);
+					pixel_color += ray_color(r, max_depth, world);
+				}
+				write_color(std::cout, pixel_samples_scale * pixel_color, sectionPixels);
+			}
+		}
+		return sectionPixels;
+	}
+
     void render(const hittable& world) {
         initialize();
 
-        std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+        auto start = std::chrono::steady_clock::now();
 
-        for (int j = 0; j < image_height; j++) {
-            std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
-            for (int i = 0; i < image_width; i++) {
-                color pixel_color(0, 0, 0);
-                for (int sample = 0; sample < samples_per_pixel; sample++) {
-                    ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, max_depth, world);
-                }
-                write_color(std::cout, pixel_samples_scale * pixel_color, pixelBuffer);
-            }
+        const int num_threads = std::thread::hardware_concurrency();
+        const int rows_per_thread = image_height / num_threads;
+        std::clog << "\rRendering...";
+
+        std::vector<std::vector<uint8_t>> sections(num_threads);
+        std::vector<std::thread> threads;
+
+        for (int t = 0; t < num_threads; ++t) {
+            int row_start = t * rows_per_thread;
+            int row_end = (t == num_threads - 1) ? image_height : (t + 1) * rows_per_thread;
+
+            threads.emplace_back([&, t, row_start, row_end]() {
+                sections[t] = renderSection(world, row_start, row_end);
+                });
         }
 
-        std::clog << "\rDone.                 \n";
+        for (auto& thread : threads) {
+            thread.join();
+        }
+
+        // Merge all sections into pixelBuffer
+        for (const auto& section : sections) {
+            pixelBuffer.insert(pixelBuffer.end(), section.begin(), section.end());
+        }
+
+        auto end = std::chrono::steady_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        std::cout << std::fixed << std::setprecision(3);
+        std::cout << "\rElapsed time: " << elapsed_seconds.count() << "s\n";
+        std::clog << "\rDone.\n";
 
         Bitmap::saveBMP("image.bmp", pixelBuffer, image_width, image_height);
     }
