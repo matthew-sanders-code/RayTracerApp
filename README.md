@@ -16,11 +16,11 @@ A simple raytracer built with C++
 - SFML
 
 ## Installation
-git clone https://github.com/matthew-sanders-code/RayTracerApp.git
-cd RayTracerApp
-cmake --build build --config release
-cd build/Release
-./RayTracerApp 
+1. git clone https://github.com/matthew-sanders-code/RayTracerApp.git
+2. cd RayTracerApp
+3. cmake --build build --config release
+4. cd build/Release
+5. ./RayTracerApp 
 
 ## Future Features
 - Implement acceleration structures (BVH)
