@@ -14,8 +14,8 @@
 class camera {
 public:
     double aspect_ratio = 1.0;  // Ratio of image width over height
-    int    image_width = 100;  // Rendered image width in pixel count
-    int    samples_per_pixel = 10;   // Count of random samples for each pixel
+    int    image_width = 800;  // Rendered image width in pixel count
+    int    samples_per_pixel = 100;   // Count of random samples for each pixel
 	int    max_depth = 10; // Maximum recursion depth for ray tracing
    
     double vfov = 90;
