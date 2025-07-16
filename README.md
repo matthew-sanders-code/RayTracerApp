@@ -1,5 +1,6 @@
 # RayTracerApp
-A simple raytracer built with C++
+A simple raytracer built with C++. This ray tracer was built by following Peter Shirley's [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html) series. All core concepts, structure, and many code snippets originate from the guide.
+
 
 ## Features
 - Renders spheres
